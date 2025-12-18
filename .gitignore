@@ -1,0 +1,40 @@
+# Python
+venv/
+.venv/
+env/
+.env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+
+# IDEs
+.vscode/
+
+# Environment
+.env
+*.env
+
+# Data
+data/
+dataset/
+datasets/
+*.csv
+*.tsv
+*.parquet
+*.h5
+*.hdf5
+*.npz
+*.npy
+
+# Models
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.pkl
+
+# Logs
+*.log
