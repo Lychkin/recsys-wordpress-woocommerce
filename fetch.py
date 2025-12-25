@@ -18,7 +18,7 @@ def fetch_orders(page=1):
     orders = []
     page = 1
     while True:
-        print(f"Fetching page {page}...")
+        print(f"Fetching page {page} of ORDERS...")
         response = requests.get(
             f"{WC_URL}/orders",
             params={"per_page": 100, "page": page},
@@ -58,11 +58,12 @@ def fetch_additional_events():
     events = []
     page = 1
     while True:
+        print(f"Fetching page {page} of ADD'EVENTS...")
         response = requests.get(
             EVENTS_API_URL, params={"page": page, "per_page": 500}
         )
         response.raise_for_status()
-        data = response.json()
+        data = response.json()["data"]
         if not data:
             break
         events.extend(data)
