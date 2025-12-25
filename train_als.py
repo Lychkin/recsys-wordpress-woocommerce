@@ -3,6 +3,10 @@ from scipy.sparse import coo_matrix
 import implicit
 import pickle
 
+DATA_DIR = "data"
+EVENTS_PATH = f"./{DATA_DIR}/events.csv"
+MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
+
 
 def build_sparse_matrix(events_df):
     users = events_df["user_id"].astype("category")
@@ -13,18 +17,17 @@ def build_sparse_matrix(events_df):
 
     data = events_df["weight"].values
 
-    matrix = coo_matrix(
+    data = events_df["weight"].values
+    mat = coo_matrix(
         (data, (user_idx, item_idx)),
-        shape=(len(users.cat.categories), len(items.cat.categories)),
-    ).tocsr()
-
-    return matrix, users.cat.categories, items.cat.categories
+        shape=(users.cat.categories.size, items.cat.categories.size),
+    )
+    return mat.tocsr(), users.cat.categories, items.cat.categories
 
 
 if __name__ == "__main__":
-    CSV_PATH = "data/events.csv"
-
-    events = pd.read_csv(CSV_PATH)
+    events = pd.read_csv(EVENTS_PATH)
+    events["user_id"] = events["user_id"].astype(str)
 
     sparse_matrix, user_map, item_map = build_sparse_matrix(events)
 
@@ -37,7 +40,7 @@ if __name__ == "__main__":
 
     model.fit(item_user)
 
-    with open("als_model.pkl", "wb") as f:
-        pickle.dump((model, user_map, item_map), f)
+    with open(MODEL_PATH, "wb") as f:
+        pickle.dump((model, user_map, item_map, sparse_matrix), f)
 
-    print("als_model.pkl saved")
+    print(f"{MODEL_PATH} saved")

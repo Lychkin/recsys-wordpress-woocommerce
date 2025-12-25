@@ -10,6 +10,8 @@ WC_URL = os.getenv("WC_URL")
 CONSUMER_KEY = os.getenv("WC_CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("WC_CONSUMER_SECRET")
 EVENTS_API_URL = os.getenv("EVENTS_API_URL")
+DATA_DIR = "data"
+RAW_EVENTS_PATH = f"./{DATA_DIR}/raw_events.csv"
 
 auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
 
@@ -54,37 +56,11 @@ def orders_to_events(orders):
     return pd.DataFrame(rows)
 
 
-def fetch_additional_events():
-    events = []
-    page = 1
-    while True:
-        print(f"Fetching page {page} of ADD'EVENTS...")
-        response = requests.get(
-            EVENTS_API_URL, params={"page": page, "per_page": 500}
-        )
-        response.raise_for_status()
-        data = response.json()["data"]
-        if not data:
-            break
-        events.extend(data)
-        page += 1
-
-    df = pd.DataFrame(events)
-    if df["timestamp"].dtype == "int64" and df["timestamp"].max() > 1e12:
-        df["timestamp"] = (df["timestamp"] / 1000).astype(int)
-    return df
-
-
 if __name__ == "__main__":
     all_orders = fetch_orders()
 
     purchase_events = orders_to_events(all_orders)
 
-    other_events = fetch_additional_events()
+    purchase_events.to_csv(RAW_EVENTS_PATH, index=False)
 
-    all_events_df = pd.concat(
-        [purchase_events, other_events], ignore_index=True
-    )
-
-    all_events_df.to_csv("events.csv", index=False)
-    print("events.csv saved, total events:", len(all_events_df))
+    print(f"{RAW_EVENTS_PATH} saved, total events:", len(purchase_events))

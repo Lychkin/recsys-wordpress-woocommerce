@@ -3,8 +3,12 @@ import pickle
 
 app = FastAPI()
 
-with open("als_model.pkl", "rb") as f:
-    model, user_map, item_map = pickle.load(f)
+DATA_DIR = "data"
+MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
+
+
+with open(MODEL_PATH, "rb") as f:
+    model, user_map, item_map, user_item_matrix = pickle.load(f)
 
 user_to_idx = {u: i for i, u in enumerate(user_map)}
 item_to_idx = {i: j for j, i in enumerate(item_map)}
@@ -18,25 +22,12 @@ def recommend_user(user_id: str, k: int = 10):
 
     uidx = user_to_idx[user_id]
 
-    # user_items=None позволяет ALS использовать общую матрицу
-    recommended = model.recommend(uidx, user_items=None, N=k)
+    user_items = user_item_matrix[uidx]
 
-    return [
-        {"item_id": idx_to_item[i], "score": float(s)}
-        for i, s in recommended
+    recommended = model.recommend(userid=uidx, user_items=user_items, N=k)
+
+    result = [
+        {"item_id": str(item_id), "score": float(score)}
+        for item_id, score in zip(recommended[0], recommended[1])
     ]
-
-
-@app.get("/recommend/item/{item_id}")
-def recommend_item(item_id: str, k: int = 10):
-    if item_id not in item_to_idx:
-        raise HTTPException(status_code=404, detail="Item not found")
-
-    iidx = item_to_idx[item_id]
-
-    similar = model.similar_items(iidx, N=k)
-
-    return [
-        {"item_id": idx_to_item[i], "score": float(s)}
-        for i, s in similar
-    ]
+    return result
