@@ -1,8 +1,8 @@
+import os
 import requests
-from requests_oauthlib import OAuth1
 import pandas as pd
 from dotenv import load_dotenv
-import os
+from requests_oauthlib import OAuth1
 
 load_dotenv()
 
@@ -12,6 +12,7 @@ CONSUMER_SECRET = os.getenv("WC_CONSUMER_SECRET")
 EVENTS_API_URL = os.getenv("EVENTS_API_URL")
 
 auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
+
 
 def fetch_orders(page=1):
     orders = []
@@ -54,18 +55,20 @@ def orders_to_events(orders):
 
 
 def fetch_additional_events():
-    all_events = []
+    events = []
     page = 1
     while True:
-        r = requests.get(EVENTS_API_URL, params={"page": page, "per_page": 500})
-        r.raise_for_status()
-        data = r.json()
+        response = requests.get(
+            EVENTS_API_URL, params={"page": page, "per_page": 500}
+        )
+        response.raise_for_status()
+        data = response.json()
         if not data:
             break
-        all_events.extend(data)
+        events.extend(data)
         page += 1
 
-    df = pd.DataFrame(all_events)
+    df = pd.DataFrame(events)
     if df["timestamp"].dtype == "int64" and df["timestamp"].max() > 1e12:
         df["timestamp"] = (df["timestamp"] / 1000).astype(int)
     return df
