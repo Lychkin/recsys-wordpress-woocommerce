@@ -38,3 +38,6 @@ checkpoints/
 
 # Logs
 *.log
+
+# Test
+test/
