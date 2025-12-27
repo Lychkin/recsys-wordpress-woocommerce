@@ -9,7 +9,6 @@ load_dotenv()
 WC_URL = os.getenv("WC_URL")
 CONSUMER_KEY = os.getenv("WC_CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("WC_CONSUMER_SECRET")
-EVENTS_API_URL = os.getenv("EVENTS_API_URL")
 DATA_DIR = "data"
 RAW_EVENTS_PATH = f"./{DATA_DIR}/raw_events.csv"
 
