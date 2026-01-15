@@ -8,16 +8,13 @@ EVENTS_PATH = f"./{DATA_DIR}/events.csv"
 
 df = pd.read_csv(RAW_EVENTS_PATH)
 
-# Веса (простая имплиситная схема)
 EVENT_WEIGHTS = {"view": 1, "add_to_cart": 3, "purchase": 5}
 
 df["weight"] = df["event"].apply(lambda x: EVENT_WEIGHTS.get(x, 1))
 
-# Умножаем только там, где quantity не равно NaN
 mask = df["quantity"].notna()
-df.loc[mask, "weight"] = df.loc[mask, "weight"] * df.loc[mask, "quantity"]
+df.loc[mask, 'weight'] *= df.loc[mask, 'quantity']
 
-# Удаляем колонку quantity
 df = df.drop("quantity", axis=1)
 
 agg = df.groupby(["user_id", "item_id"])["weight"].sum().reset_index()
