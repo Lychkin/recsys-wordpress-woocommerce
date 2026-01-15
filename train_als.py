@@ -11,18 +11,16 @@ MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
 def build_sparse_matrix(events_df):
     df = events_df.copy()
 
-    user_ids = df['user_id'].unique()
-    item_ids = df['item_id'].unique()
+    user_ids = df["user_id"].unique()
+    item_ids = df["item_id"].unique()
 
-    user_map = {u:i for i,u in enumerate(user_ids)}
-    item_map = {p:i for i,p in enumerate(item_ids)}
+    user_map = {u: i for i, u in enumerate(user_ids)}
+    item_map = {p: i for i, p in enumerate(item_ids)}
 
-    df['user_idx'] = df['user_id'].map(user_map)
-    df['item_idx'] = df['item_id'].map(item_map)
+    df["user_idx"] = df["user_id"].map(user_map)
+    df["item_idx"] = df["item_id"].map(item_map)
 
-    matrix = coo_matrix(
-        (df['weight'], (df['user_idx'], df['item_idx']))
-    )
+    matrix = coo_matrix((df["weight"], (df["user_idx"], df["item_idx"])))
     return matrix, user_map, item_map
 
 

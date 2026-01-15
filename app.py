@@ -16,6 +16,7 @@ item_to_idx = {i: j for j, i in enumerate(item_map)}
 idx_to_item = {v: k for k, v in item_to_idx.items()}
 popular_items = pd.read_csv(POPULAR_ITEMS_PATH)
 
+
 @app.get("/recommend/user/{user_id}")
 def recommend_user(user_id: int, k: int = 10):
     if user_id not in user_to_idx:
