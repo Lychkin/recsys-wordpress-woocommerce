@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException
 import pickle
+import pandas as pd
 
 app = FastAPI()
 
 DATA_DIR = "data"
 MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
-
+POPULAR_ITEMS_PATH = f"./{DATA_DIR}/popular_items.csv"
 
 with open(MODEL_PATH, "rb") as f:
     model, user_map, item_map, user_items_matrix = pickle.load(f)
@@ -13,12 +14,12 @@ with open(MODEL_PATH, "rb") as f:
 user_to_idx = {u: i for i, u in enumerate(user_map)}
 item_to_idx = {i: j for j, i in enumerate(item_map)}
 idx_to_item = {v: k for k, v in item_to_idx.items()}
-
+popular_items = pd.read_csv(POPULAR_ITEMS_PATH)
 
 @app.get("/recommend/user/{user_id}")
 def recommend_user(user_id: int, k: int = 10):
     if user_id not in user_to_idx:
-        raise HTTPException(status_code=404, detail="User not found")
+        return popular_items[:k].to_dict(orient="records")
 
     uidx = user_to_idx[user_id]
 
