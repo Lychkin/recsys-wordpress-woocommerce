@@ -9,38 +9,37 @@ MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
 
 
 def build_sparse_matrix(events_df):
-    users = events_df["user_id"].astype("category")
-    items = events_df["item_id"].astype("category")
+    df = events_df.copy()
 
-    user_idx = users.cat.codes.values
-    item_idx = items.cat.codes.values
+    user_ids = df['user_id'].unique()
+    item_ids = df['item_id'].unique()
 
-    data = events_df["weight"].values
+    user_map = {u:i for i,u in enumerate(user_ids)}
+    item_map = {p:i for i,p in enumerate(item_ids)}
 
-    data = events_df["weight"].values
-    mat = coo_matrix(
-        (data, (user_idx, item_idx)),
-        shape=(users.cat.categories.size, items.cat.categories.size),
+    df['user_idx'] = df['user_id'].map(user_map)
+    df['item_idx'] = df['item_id'].map(item_map)
+
+    matrix = coo_matrix(
+        (df['weight'], (df['user_idx'], df['item_idx']))
     )
-    return mat.tocsr(), users.cat.categories, items.cat.categories
+    return matrix, user_map, item_map
 
 
 if __name__ == "__main__":
     events = pd.read_csv(EVENTS_PATH)
-    events["user_id"] = events["user_id"].astype(str)
 
-    sparse_matrix, user_map, item_map = build_sparse_matrix(events)
+    matrix, user_map, item_map = build_sparse_matrix(events)
 
-    # implicit ожидает item-user matrix
-    item_user = sparse_matrix.T.tocsr()
+    user_item_matrix = matrix.tocsr()
 
     model = implicit.als.AlternatingLeastSquares(
         factors=64, regularization=0.01, iterations=15
     )
 
-    model.fit(item_user)
+    model.fit(user_item_matrix)
 
     with open(MODEL_PATH, "wb") as f:
-        pickle.dump((model, user_map, item_map, sparse_matrix), f)
+        pickle.dump((model, user_map, item_map, user_item_matrix), f)
 
     print(f"{MODEL_PATH} saved")
