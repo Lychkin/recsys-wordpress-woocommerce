@@ -13,8 +13,15 @@ EVENT_WEIGHTS = {"view": 1, "add_to_cart": 3, "purchase": 5}
 
 df["weight"] = df["event"].apply(lambda x: EVENT_WEIGHTS.get(x, 1))
 
-df = df[["user_id", "item_id", "event", "weight", "timestamp"]]
+# Умножаем только там, где quantity не равно NaN
+mask = df["quantity"].notna()
+df.loc[mask, "weight"] = df.loc[mask, "weight"] * df.loc[mask, "quantity"]
 
-df.to_csv(EVENTS_PATH, index=False)
+# Удаляем колонку quantity
+df = df.drop("quantity", axis=1)
+
+agg = df.groupby(["user_id", "item_id"])["weight"].sum().reset_index()
+
+agg.to_csv(EVENTS_PATH, index=False)
 
 print(f"{EVENTS_PATH} created")
