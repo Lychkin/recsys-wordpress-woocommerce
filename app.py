@@ -1,20 +1,18 @@
 from fastapi import FastAPI, HTTPException
 import pickle
 import pandas as pd
+import config
 
 app = FastAPI()
 
-DATA_DIR = "data"
-MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
-POPULAR_ITEMS_PATH = f"./{DATA_DIR}/popular_items.csv"
 
-with open(MODEL_PATH, "rb") as f:
+with open(config.MODEL_PATH, "rb") as f:
     model, user_map, item_map, user_items_matrix = pickle.load(f)
 
 user_to_idx = {u: i for i, u in enumerate(user_map)}
 item_to_idx = {i: j for j, i in enumerate(item_map)}
 idx_to_item = {v: k for k, v in item_to_idx.items()}
-popular_items = pd.read_csv(POPULAR_ITEMS_PATH)
+popular_items = pd.read_csv(config.POPULAR_ITEMS_PATH)
 
 
 @app.get("/recommend/user/{user_id}")

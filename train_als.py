@@ -2,10 +2,7 @@ import pandas as pd
 from scipy.sparse import coo_matrix
 import implicit
 import pickle
-
-DATA_DIR = "data"
-EVENTS_PATH = f"./{DATA_DIR}/events.csv"
-MODEL_PATH = f"./{DATA_DIR}/als_model.pkl"
+import config
 
 
 def build_sparse_matrix(events_df):
@@ -25,7 +22,7 @@ def build_sparse_matrix(events_df):
 
 
 if __name__ == "__main__":
-    events = pd.read_csv(EVENTS_PATH)
+    events = pd.read_csv(config.EVENTS_PATH)
 
     matrix, user_map, item_map = build_sparse_matrix(events)
 
@@ -37,7 +34,7 @@ if __name__ == "__main__":
 
     model.fit(user_item_matrix)
 
-    with open(MODEL_PATH, "wb") as f:
+    with open(config.MODEL_PATH, "wb") as f:
         pickle.dump((model, user_map, item_map, user_item_matrix), f)
 
-    print(f"{MODEL_PATH} saved")
+    print(f"{config.MODEL_PATH} saved")

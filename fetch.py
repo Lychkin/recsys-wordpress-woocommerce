@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 from dotenv import load_dotenv
 from requests_oauthlib import OAuth1
+import config
 
 load_dotenv()
 
@@ -10,8 +11,6 @@ WC_URL = os.getenv("WC_URL")
 CONSUMER_KEY = os.getenv("WC_CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("WC_CONSUMER_SECRET")
 EVENTS_API_URL = os.getenv("EVENTS_API_URL")
-DATA_DIR = "data"
-RAW_EVENTS_PATH = f"./{DATA_DIR}/raw_events.csv"
 
 auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
 
@@ -88,5 +87,6 @@ if __name__ == "__main__":
         [purchase_events, other_events], ignore_index=True
     )
 
-    all_events_df.to_csv(RAW_EVENTS_PATH, index=False)
-    print(f"{RAW_EVENTS_PATH} saved, total events:", len(all_events_df))
+    os.makedirs(config.DATA_DIR, exist_ok=True)
+    all_events_df.to_csv(config.RAW_EVENTS_PATH, index=False)
+    print(f"{config.RAW_EVENTS_PATH} saved, total events:", len(all_events_df))

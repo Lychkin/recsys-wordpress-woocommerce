@@ -1,13 +1,8 @@
 import pandas as pd
+import config
 
 
-DATA_DIR = "data"
-RAW_EVENTS_PATH = f"./{DATA_DIR}/raw_events.csv"
-EVENTS_PATH = f"./{DATA_DIR}/events.csv"
-POPULAR_ITEMS_PATH = f"./{DATA_DIR}/popular_items.csv"
-
-
-df = pd.read_csv(RAW_EVENTS_PATH)
+df = pd.read_csv(config.RAW_EVENTS_PATH)
 
 EVENT_WEIGHTS = {"view": 1, "add_to_cart": 3, "purchase": 5}
 
@@ -20,12 +15,12 @@ df = df.drop("quantity", axis=1)
 
 agg = df.groupby(["user_id", "item_id"])["weight"].sum().reset_index()
 
-agg.to_csv(EVENTS_PATH, index=False)
+agg.to_csv(config.EVENTS_PATH, index=False)
 
-print(f"{EVENTS_PATH} created")
+print(f"{config.EVENTS_PATH} created")
 
 agg.sort_values(by="weight", ascending=False)[["item_id", "weight"]].to_csv(
-    POPULAR_ITEMS_PATH, index=False
+    config.POPULAR_ITEMS_PATH, index=False
 )
 
-print(f"{POPULAR_ITEMS_PATH} created")
+print(f"{config.POPULAR_ITEMS_PATH} created")
