@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class Settings(BaseSettings):
-    app_name: str = "Recsys-WordPress-WooCommerce"
+    app_name: str = "Recsys WordPress WooCommerce API"
 
     host: str = "localhost"
     port: int = 8000

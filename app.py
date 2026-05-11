@@ -4,7 +4,7 @@ import pandas as pd
 from core.config import settings
 import uvicorn
 
-app = FastAPI()
+app = FastAPI(title=settings.app_name)
 
 
 with open(settings.rec_model_path, "rb") as f:
