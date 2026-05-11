@@ -1,18 +1,10 @@
 import os
 import requests
 import pandas as pd
-from dotenv import load_dotenv
 from requests_oauthlib import OAuth1
-import config
+from core.config import settings
 
-load_dotenv()
-
-WC_URL = os.getenv("WC_URL")
-CONSUMER_KEY = os.getenv("WC_CONSUMER_KEY")
-CONSUMER_SECRET = os.getenv("WC_CONSUMER_SECRET")
-EVENTS_API_URL = os.getenv("EVENTS_API_URL")
-
-auth = OAuth1(CONSUMER_KEY, CONSUMER_SECRET)
+auth = OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret)
 
 
 def fetch_orders(page=1):
@@ -21,7 +13,7 @@ def fetch_orders(page=1):
     while True:
         print(f"Fetching page {page} of ORDERS...")
         response = requests.get(
-            f"{WC_URL}/orders",
+            f"{settings.wc_url}/orders",
             params={"per_page": 100, "page": page},
             auth=auth,
         )
@@ -61,7 +53,7 @@ def fetch_additional_events():
     while True:
         print(f"Fetching page {page} of ADD'EVENTS...")
         response = requests.get(
-            EVENTS_API_URL, params={"page": page, "per_page": 100}
+            settings.events_api_url, params={"page": page, "per_page": 100}
         )
         response.raise_for_status()
         data = response.json()["data"]
@@ -87,6 +79,8 @@ if __name__ == "__main__":
         [purchase_events, other_events], ignore_index=True
     )
 
-    os.makedirs(config.DATA_DIR, exist_ok=True)
-    all_events_df.to_csv(config.RAW_EVENTS_PATH, index=False)
-    print(f"{config.RAW_EVENTS_PATH} saved, total events:", len(all_events_df))
+    os.makedirs(settings.data_dir, exist_ok=True)
+    all_events_df.to_csv(settings.raw_events_path, index=False)
+    print(
+        f"{settings.raw_events_path} saved, total events:", len(all_events_df)
+    )

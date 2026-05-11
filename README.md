@@ -186,34 +186,28 @@ API:
 pip install -r requirements.txt
 ```
 
-2. Собрать датасет:
+2. Собрать данные:
 
 ```bash
 python fetch.py
 ```
 
-3. Собрать датасет:
-
-```bash
-python fetch.py
-```
-
-4. Преобразовать данные:
+3. Подготовить датасет:
 
 ```bash
 python prepare_data.py
 ```
 
+4. Обучить модель:
+
+```bash
+python train_als.py
+```
+
 5. Запустить API:
 
 ```bash
-uvicorn app:app --reload
-```
-
-С указанием порта:
-
-```bash
-uvicorn app:app --reload --port 8000
+py app.py
 ```
 
 ---

@@ -1,18 +1,19 @@
 from fastapi import FastAPI, HTTPException
 import pickle
 import pandas as pd
-import config
+from core.config import settings
+import uvicorn
 
 app = FastAPI()
 
 
-with open(config.MODEL_PATH, "rb") as f:
+with open(settings.rec_model_path, "rb") as f:
     model, user_map, item_map, user_items_matrix = pickle.load(f)
 
 user_to_idx = {u: i for i, u in enumerate(user_map)}
 item_to_idx = {i: j for j, i in enumerate(item_map)}
 idx_to_item = {v: k for k, v in item_to_idx.items()}
-popular_items = pd.read_csv(config.POPULAR_ITEMS_PATH)
+popular_items = pd.read_csv(settings.popular_items_path)
 
 
 @app.get("/recommend/user/{user_id}")
@@ -48,3 +49,7 @@ def recommend_item(item_id: int, k: int = 10):
     ]
 
     return result
+
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host=settings.host, port=settings.port, reload=True)

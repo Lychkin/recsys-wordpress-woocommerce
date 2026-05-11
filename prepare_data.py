@@ -1,8 +1,7 @@
 import pandas as pd
-import config
+from core.config import settings
 
-
-df = pd.read_csv(config.RAW_EVENTS_PATH)
+df = pd.read_csv(settings.raw_events_path)
 
 EVENT_WEIGHTS = {"view": 1, "add_to_cart": 3, "purchase": 5}
 
@@ -15,12 +14,12 @@ df = df.drop("quantity", axis=1)
 
 agg = df.groupby(["user_id", "item_id"])["weight"].sum().reset_index()
 
-agg.to_csv(config.EVENTS_PATH, index=False)
+agg.to_csv(settings.events_path, index=False)
 
-print(f"{config.EVENTS_PATH} created")
+print(f"{settings.events_path} created")
 
 agg.sort_values(by="weight", ascending=False)[["item_id", "weight"]].to_csv(
-    config.POPULAR_ITEMS_PATH, index=False
+    settings.popular_items_path, index=False
 )
 
-print(f"{config.POPULAR_ITEMS_PATH} created")
+print(f"{settings.popular_items_path} created")
