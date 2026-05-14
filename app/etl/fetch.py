@@ -2,7 +2,8 @@ import os
 import requests
 import pandas as pd
 from requests_oauthlib import OAuth1
-from core.config import settings
+
+from app.core.config import settings
 
 
 def fetch_orders(page=1):

@@ -1,5 +1,5 @@
 import pandas as pd
-from core.config import settings
+from app.core.config import settings
 
 df = pd.read_csv(settings.raw_events_path)
 

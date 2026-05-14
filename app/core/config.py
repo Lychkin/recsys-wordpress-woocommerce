@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     wc_consumer_secret: str
     events_api_url: str
 
-    base_dir: Path = Path(__file__).resolve().parent.parent
+    base_dir: Path = Path(__file__).resolve().parent.parent.parent
     data_dir: Path = base_dir / "data"
     raw_events_path: Path = data_dir / "raw_events.csv"
     events_path: Path = data_dir / "events.csv"

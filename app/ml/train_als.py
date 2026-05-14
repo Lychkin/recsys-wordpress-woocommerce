@@ -2,7 +2,7 @@ import pandas as pd
 from scipy.sparse import coo_matrix
 import implicit
 import pickle
-from core.config import settings
+from app.core.config import settings
 
 
 def build_sparse_matrix(events_df):

@@ -14,8 +14,6 @@
 
 Модель написана на **Python** и интегрируется в WordPress через **FastAPI**.
 
----
-
 ## Идея рекомендательной системы
 
 Вместо явных оценок, используется **Implicit Feedback** — неявные сигналы интереса пользователя:
@@ -47,8 +45,6 @@ ALS:
 
 Это тот же класс алгоритмов, что используется в Amazon, Netflix, Spotify.
 
----
-
 ## Архитектура проекта
 
 ```
@@ -76,8 +72,6 @@ FastAPI (/recommend/user/{user_id} & /recommend/item/{item_id})
 WordPress recommendations
 ```
 
----
-
 ## Структура проекта
 
 ```
@@ -93,8 +87,6 @@ project/
 └── README.md
 ```
 
----
-
 ## Описание ключевых файлов
 
 ### `fetch.py`
@@ -106,8 +98,6 @@ ETL-скрипт (Extract → Transform → Load), который:
 3. Объединянет эти события в одну структуру
 4. Создаёт файл `raw_events.csv`
 
----
-
 ### `prepare_data.py`
 
 ETL-скрипт (Extract → Transform → Load), который:
@@ -117,8 +107,6 @@ ETL-скрипт (Extract → Transform → Load), который:
 3. Удаляет лишние колонки
 4. Создаёт файл `popular_items.csv`
 5. Создаёт файл `events.csv`
-
----
 
 ### `train_als.py`
 
@@ -131,8 +119,6 @@ ETL-скрипт (Extract → Transform → Load), который:
 
 - рекомендовать товары пользователю
 - находить похожие товары
-
----
 
 ### `app.py`
 
@@ -157,8 +143,6 @@ API:
 ]
 ```
 
----
-
 ## Почему используется Implicit Feedback
 
 В e-commerce:
@@ -176,8 +160,6 @@ API:
 - работать с холодным стартом
 - учитывать реальное поведение
 
----
-
 ## Как запустить
 
 1. Установить зависимости:
@@ -189,28 +171,26 @@ pip install -r requirements.txt
 2. Собрать данные:
 
 ```bash
-python fetch.py
+python -m app.etl.fetch
 ```
 
 3. Подготовить датасет:
 
 ```bash
-python prepare_data.py
+python -m app.etl.prepare_data
 ```
 
 4. Обучить модель:
 
 ```bash
-python train_als.py
+python -m app.ml.train_als
 ```
 
 5. Запустить API:
 
 ```bash
-py app.py
+python -m app.main
 ```
-
----
 
 ## Цель проекта
 
