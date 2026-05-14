@@ -1,0 +1,16 @@
+[flake8]
+max-line-length = 80
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    migrations,
+    node_modules,
+    generated,
+    docs/_build
+
+filename =
+    *.py,

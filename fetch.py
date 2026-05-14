@@ -4,8 +4,6 @@ import pandas as pd
 from requests_oauthlib import OAuth1
 from core.config import settings
 
-auth = OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret)
-
 
 def fetch_orders(page=1):
     orders = []
@@ -15,7 +13,7 @@ def fetch_orders(page=1):
         response = requests.get(
             f"{settings.wc_url}/orders",
             params={"per_page": 100, "page": page},
-            auth=auth,
+            auth=OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret),
         )
         response.raise_for_status()
         data = response.json()

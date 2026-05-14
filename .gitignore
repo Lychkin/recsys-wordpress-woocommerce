@@ -39,5 +39,12 @@ checkpoints/
 # Logs
 *.log
 
-# Test
-test/
+# Database
+db.sqlite3
+*.db
+db
+*.sqlite
+*.sqlite3
+
+# Sandbox
+sandbox/
