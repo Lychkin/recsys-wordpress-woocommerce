@@ -1,7 +1,13 @@
-from fastapi import APIRouter
-from app.services.recommendation_service import RecommendationService
+from fastapi import APIRouter, Depends
 
-router = APIRouter(prefix="/recommend")
+from app.services.recommendation_service import RecommendationService
+from app.auth import verify_api_key
+
+router = APIRouter(
+    prefix="/recommend",
+    tags=["recommendations"],
+    dependencies=[Depends(verify_api_key)],
+)
 
 
 @router.get("/user/{user_id}")
