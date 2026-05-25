@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     port: int
 
     recommender_api_key: str
+    recommender_api_header: str
 
     wc_url: str
     wc_consumer_key: str
