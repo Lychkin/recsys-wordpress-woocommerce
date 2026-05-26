@@ -62,6 +62,7 @@ def fetch_additional_events():
         page += 1
 
     df = pd.DataFrame(events)
+    df.drop(columns=["id"], inplace=True)
     if df["timestamp"].dtype == "int64" and df["timestamp"].max() > 1e12:
         df["timestamp"] = (df["timestamp"] / 1000).astype(int)
     return df
