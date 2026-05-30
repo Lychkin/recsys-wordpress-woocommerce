@@ -66,7 +66,7 @@ WooCommerce API  FastAPI (/event)
       │               │
       ├────────────────
       ▼
-fetch.py → raw_events.csv
+fetch_events.py → raw_events.csv
       │
       ▼
 prepare_data.py → events.csv
@@ -113,7 +113,7 @@ Cтруктура проекта разделяется на:
 │   │   └── exceptions.py
 │   │
 │   ├── etl/                          # ETL и взаимодействие с данными
-│   │   ├── fetch.py                    # Сбор данных из внешних API (заказы, просмотры, события)
+│   │   ├── fetch_events.py             # Сбор данных из внешних API (заказы, просмотры, события)
 │   │   └── prepare_data.py             # Очистка и агрегация данных: веса событий, объединение взаимодействий, подготовка CSV для ALS
 │   │
 │   │── auth.py                       # Модуль авторизации (сверяет секретный ключ)
@@ -177,7 +177,7 @@ pip install -r requirements.txt
 2. Собрать данные:
 
 ```bash
-python3 -m app.etl.fetch
+python3 -m app.etl.fetch_events
 ```
 
 3. Подготовить датасет:

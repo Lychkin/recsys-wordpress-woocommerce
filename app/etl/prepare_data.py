@@ -3,7 +3,7 @@ from app.core.config import settings
 
 df = pd.read_csv(settings.raw_events_path)
 
-EVENT_WEIGHTS = {"view": 1, "add_to_cart": 3, "purchase": 5}
+EVENT_WEIGHTS = {"view": 1, "add_to_cart": 4, "purchase": 15}
 
 df["weight"] = df["event"].apply(lambda x: EVENT_WEIGHTS.get(x, 1))
 
