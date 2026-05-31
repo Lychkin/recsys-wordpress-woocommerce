@@ -78,9 +78,10 @@ if __name__ == "__main__":
     all_events_df = pd.concat(
         [purchase_events, other_events], ignore_index=True
     )
+    print("Total events:", len(all_events_df))
 
     os.makedirs(settings.data_dir, exist_ok=True)
-    all_events_df.to_csv(settings.raw_events_path, index=False)
-    print(
-        f"{settings.raw_events_path} saved, total events:", len(all_events_df)
-    )
+    all_events_df.to_parquet(settings.raw_events_parquet_path, index=False)
+    print(f"{settings.raw_events_parquet_path} saved")
+    all_events_df.to_csv(settings.raw_events_csv_path, index=False)
+    print(f"{settings.raw_events_csv_path} saved")

@@ -22,7 +22,7 @@ def build_sparse_matrix(events_df):
 
 
 if __name__ == "__main__":
-    events = pd.read_csv(settings.events_path)
+    events = pd.read_parquet(settings.events_parquet_path)
 
     matrix, user_map, item_map = build_sparse_matrix(events)
 

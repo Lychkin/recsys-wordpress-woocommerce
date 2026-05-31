@@ -66,10 +66,10 @@ WooCommerce API  FastAPI (/event)
       │               │
       ├────────────────
       ▼
-fetch_events.py → raw_events.csv
+fetch_events.py → raw_events.parquet
       │
       ▼
-prepare_data.py → events.csv
+prepare_data.py → events.parquet
       │
       ▼
 train_als.py → als_model.pkl
@@ -121,10 +121,12 @@ Cтруктура проекта разделяется на:
 │   └── __init__.py                   # Инициализация Python-пакета
 │
 ├── data/                             # Данные появляющиеся в процессе функционирования системы
-│   ├── raw_events.csv                  # "Сырые"" события из внешних API
-│   ├── events.csv                      # Подготовленные взаимодействия пользователей
-│   ├── popular_items.csv               # Популярные товары
-│   └── als_model.pkl                   # Сохранённая ALS-модель
+│   ├── raw_events.parquet              # "Сырые"" события из внешних API в формате Parquet
+│   ├── events.parquet                  # Подготовленные взаимодействия пользователей в формате Parquet
+│   ├── raw_events.csv                  # "Сырые"" события из внешних API в формате CSV
+│   ├── events.csv                      # Подготовленные взаимодействия пользователей в формате CSV
+│   ├── popular_items.csv               # Популярные товары в формате CSV
+│   └── als_model.pkl                   # Сохранённая ALS-модель в бинарном формате Pickle
 │
 ├── requirements.txt                    # Python-зависимости проекта
 ├── .env                                # Переменные окружения: API URL, токены

@@ -18,8 +18,13 @@ class Settings(BaseSettings):
 
     base_dir: Path = Path(__file__).resolve().parent.parent.parent
     data_dir: Path = base_dir / "data"
-    raw_events_path: Path = data_dir / "raw_events.csv"
-    events_path: Path = data_dir / "events.csv"
+
+    raw_events_parquet_path: Path = data_dir / "raw_events.parquet"
+    raw_events_csv_path: Path = data_dir / "raw_events.csv"
+
+    events_parquet_path: Path = data_dir / "events.parquet"
+    events_csv_path: Path = data_dir / "events.csv"
+    
     popular_items_path: Path = data_dir / "popular_items.csv"
     rec_model_path: Path = data_dir / "als_model.pkl"
 
