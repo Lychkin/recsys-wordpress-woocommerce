@@ -1,4 +1,5 @@
 import os
+
 import requests
 import pandas as pd
 from requests_oauthlib import OAuth1
@@ -9,11 +10,23 @@ from app.core.config import settings
 def fetch_orders(page=1):
     orders = []
     page = 1
+    fields = [
+        "id",
+        "date_completed",
+        "date_paid",
+        "customer_id",
+        "line_item",
+    ].join(",")
+
     while True:
         print(f"Fetching page {page} of ORDERS...")
         response = requests.get(
             f"{settings.wc_url}/orders",
-            params={"per_page": 100, "page": page},
+            params={
+                "per_page": 100,
+                "page": page,
+                "_fields": fields,
+            },
             auth=OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret),
         )
         response.raise_for_status()
@@ -29,16 +42,16 @@ def fetch_orders(page=1):
 def orders_to_events(orders):
     rows = []
     for order in orders:
-        user = order.get("customer_id") or f"guest_{order['id']}"
-        ts = order["date_completed"] or order["date_created"]
-
         for item in order["line_items"]:
             rows.append(
                 {
-                    "user_id": str(user),
+                    "user_id": str(
+                        order.get("customer_id") or f"guest_{order['id']}"
+                    ),
                     "item_id": str(item["product_id"]),
                     "event": "purchase",
-                    "timestamp": ts,
+                    "timestamp": order["date_completed"]
+                    or order["date_created"],
                     "quantity": int(item.get("quantity", 1)),
                 }
             )
@@ -78,6 +91,9 @@ if __name__ == "__main__":
     all_events_df = pd.concat(
         [purchase_events, other_events], ignore_index=True
     )
+
+    del all_orders, purchase_events, other_events
+
     print("Total events:", len(all_events_df))
 
     os.makedirs(settings.data_dir, exist_ok=True)

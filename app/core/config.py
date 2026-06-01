@@ -24,7 +24,10 @@ class Settings(BaseSettings):
 
     events_parquet_path: Path = data_dir / "events.parquet"
     events_csv_path: Path = data_dir / "events.csv"
-    
+
+    products_parquet_path: Path = data_dir / "products.parquet"
+    products_csv_path: Path = data_dir / "products.csv"
+
     popular_items_path: Path = data_dir / "popular_items.csv"
     rec_model_path: Path = data_dir / "als_model.pkl"
 
