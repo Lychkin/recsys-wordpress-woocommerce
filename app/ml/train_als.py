@@ -29,7 +29,7 @@ if __name__ == "__main__":
     user_item_matrix = matrix.tocsr()
 
     model = implicit.als.AlternatingLeastSquares(
-        factors=64, regularization=0.01, iterations=15
+        factors=64, regularization=0.05, iterations=30, random_state=42
     )
 
     model.fit(user_item_matrix)

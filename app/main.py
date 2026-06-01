@@ -19,6 +19,9 @@ app = FastAPI(title=settings.app_name, lifespan=lifespan)
 
 app.include_router(recommend.router)
 
+@app.get("/")
+def root():
+    return {"message": "Recsys API is running"}
 
 @app.exception_handler(ItemNotFoundError)
 def item_not_found_handler(request: Request, exc: ItemNotFoundError):

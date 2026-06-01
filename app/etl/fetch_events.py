@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import requests
 import pandas as pd
@@ -10,13 +11,15 @@ from app.core.config import settings
 def fetch_orders(page=1):
     orders = []
     page = 1
-    fields = [
-        "id",
-        "date_completed",
-        "date_paid",
-        "customer_id",
-        "line_item",
-    ].join(",")
+    required_fields = (",").join(
+        [
+            "id",
+            "date_completed",
+            "date_paid",
+            "customer_id",
+            "line_items",
+        ]
+    )
 
     while True:
         print(f"Fetching page {page} of ORDERS...")
@@ -25,7 +28,7 @@ def fetch_orders(page=1):
             params={
                 "per_page": 100,
                 "page": page,
-                "_fields": fields,
+                "_fields": required_fields,
             },
             auth=OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret),
         )
@@ -82,6 +85,8 @@ def fetch_additional_events():
 
 
 if __name__ == "__main__":
+    start = datetime.now()
+
     all_orders = fetch_orders()
 
     purchase_events = orders_to_events(all_orders)
@@ -101,3 +106,5 @@ if __name__ == "__main__":
     print(f"{settings.raw_events_parquet_path} saved")
     all_events_df.to_csv(settings.raw_events_csv_path, index=False)
     print(f"{settings.raw_events_csv_path} saved")
+
+    print(f"Time: {datetime.now() - start} ")

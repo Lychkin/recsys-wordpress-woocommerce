@@ -1,6 +1,7 @@
 import os
 import re
 from html import unescape
+from datetime import datetime
 
 import requests
 import pandas as pd
@@ -12,16 +13,18 @@ from app.core.config import settings
 def fetch_products(page=1):
     products = []
     page = 1
-    fields = [
-        "id",
-        "name",
-        "categories",
-        "brands",
-        "price",
-        "tags",
-        "description",
-        "attributes",
-    ].join(",")
+    required_fields = (",").join(
+        [
+            "id",
+            "name",
+            "categories",
+            "brands",
+            "price",
+            "tags",
+            "description",
+            "attributes",
+        ]
+    )
 
     while True:
         print(f"Fetching page {page} of PRODUCTS...")
@@ -30,7 +33,7 @@ def fetch_products(page=1):
             params={
                 "per_page": 100,
                 "page": page,
-                "_fields": fields,
+                "_fields": required_fields,
             },
             auth=OAuth1(settings.wc_consumer_key, settings.wc_consumer_secret),
         )
@@ -88,6 +91,7 @@ def process_products(products):
 
 
 def main():
+    start = datetime.now()
     all_products = fetch_products()
 
     all_products_df = process_products(all_products)
@@ -101,6 +105,8 @@ def main():
     print(f"{settings.products_parquet_path} saved")
     all_products_df.to_csv(settings.products_csv_path, index=False)
     print(f"{settings.products_csv_path} saved")
+
+    print(f"Time: {datetime.now() - start} ")
 
 
 if __name__ == "__main__":
