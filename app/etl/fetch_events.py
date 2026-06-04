@@ -48,10 +48,10 @@ def orders_to_events(orders):
         for item in order["line_items"]:
             rows.append(
                 {
-                    "user_id": str(
+                    "user_id": int(
                         order.get("customer_id") or f"guest_{order['id']}"
                     ),
-                    "item_id": str(item["product_id"]),
+                    "item_id": int(item["product_id"]),
                     "event": "purchase",
                     "timestamp": order["date_completed"]
                     or order["date_created"],
@@ -89,9 +89,12 @@ if __name__ == "__main__":
 
     all_orders = fetch_orders()
 
-    purchase_events = orders_to_events(all_orders)
-
     other_events = fetch_additional_events()
+
+    print(f"Fetching time: {datetime.now() - start}")
+    start = datetime.now()
+
+    purchase_events = orders_to_events(all_orders)
 
     all_events_df = pd.concat(
         [purchase_events, other_events], ignore_index=True
@@ -107,4 +110,4 @@ if __name__ == "__main__":
     all_events_df.to_csv(settings.raw_events_csv_path, index=False)
     print(f"{settings.raw_events_csv_path} saved")
 
-    print(f"Time: {datetime.now() - start} ")
+    print(f"Processing and export time: {datetime.now() - start}")

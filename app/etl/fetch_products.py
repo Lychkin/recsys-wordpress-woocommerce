@@ -96,6 +96,9 @@ def main():
 
     all_products_df = process_products(all_products)
 
+    print(f"Fetching time: {datetime.now() - start}")
+    start = datetime.now()
+
     del all_products
 
     print("Total products:", len(all_products_df))
@@ -106,7 +109,7 @@ def main():
     all_products_df.to_csv(settings.products_csv_path, index=False)
     print(f"{settings.products_csv_path} saved")
 
-    print(f"Time: {datetime.now() - start} ")
+    print(f"Processing and export time: {datetime.now() - start}")
 
 
 if __name__ == "__main__":

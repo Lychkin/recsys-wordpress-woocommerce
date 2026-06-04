@@ -28,8 +28,10 @@ class Settings(BaseSettings):
     products_parquet_path: Path = data_dir / "products.parquet"
     products_csv_path: Path = data_dir / "products.csv"
 
-    popular_items_path: Path = data_dir / "popular_items.csv"
-    rec_model_path: Path = data_dir / "als_model.pkl"
+    popularity_parquet_path: Path = data_dir / "popular_items.parquet"
+    popularity_csv_path: Path = data_dir / "popular_items.csv"
+
+    hybrid_model_path: Path = data_dir / "hybrid_model.pkl"
 
     model_config = SettingsConfigDict(
         env_file=".env",

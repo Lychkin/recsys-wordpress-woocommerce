@@ -1,0 +1,27 @@
+[tool.black]
+line-length = 80
+
+# Исключения и паттерны
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | \.env
+  | venv
+  | env
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+  | node_modules
+  | __pycache__
+)/
+'''
+
+# Включить специфичные файлы (если нужно)
+include = '\.pyi?$'
