@@ -14,24 +14,18 @@ def main():
     BASE_WEIGHT = {"view": 1, "add_to_cart": 4, "purchase": 12}
     HALF_LIFE = {"view": 7, "add_to_cart": 14, "purchase": 90}
 
-    # Базовый вес
     events_df["base_weight"] = events_df["event"].map(BASE_WEIGHT)
 
-    # Half-life
     events_df["half_life"] = events_df["event"].map(HALF_LIFE)
 
-    # Возраст события
     events_df["age_days"] = (
         now - pd.to_datetime(events_df["timestamp"])
     ).dt.days
 
-    # Временной коэффициент
     events_df["decay"] = 0.5 ** (events_df["age_days"] / events_df["half_life"])
 
-    # Коэффициент кол-ва товара
     events_df["quantity_factor"] = np.log1p(events_df["quantity"])
 
-    # Итоговый вес
     events_df["weight"] = (
         events_df["base_weight"]
         * events_df["quantity_factor"]
@@ -61,6 +55,13 @@ def main():
         .to_frame()
         .reset_index()
     )
+
+    popularity_min = popularity_df["weight"].min()
+    popularity_max = popularity_df["weight"].max()
+    popularity_df["weight"] = (popularity_df["weight"] - popularity_min) / (
+        popularity_max - popularity_min
+    )
+    del popularity_min, popularity_max
 
     popularity_df.to_parquet(settings.popularity_parquet_path, index=True)
     print(f"{settings.popularity_parquet_path} created")
